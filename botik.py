@@ -14,6 +14,8 @@ bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
 dp.middleware.setup(LoggingMiddleware())
 
+GIFT_FILE = "gift_links.txt"
+
 # Функция для получения информации о количестве ссылок
 def get_links_info(links):
     categories = {
