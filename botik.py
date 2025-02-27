@@ -1,16 +1,18 @@
-import random
+import asyncio
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.contrib.middlewares.logging import LoggingMiddleware
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+import os
 
 # Токен вашего бота (замените на свой)
 BOT_TOKEN = "8007767378:AAGK0ifS-oMWsgmPUvlrIMf4qMgVcQxr4KU"
-
-# Путь к файлу с ссылками
-GIFT_FILE = "gift_links.txt"
+WEBHOOK_URL = "https://bot-tgshechka.onrender.com/webhook"  # Замените на URL вашего вебхука
 
 # Инициализация бота и диспетчера
 bot = Bot(token=BOT_TOKEN)
-dp = Dispatcher(bot)
+dp = Dispatcher(bot, storage=MemoryStorage())
+dp.middleware.setup(LoggingMiddleware())
 
 # Функция для получения информации о количестве ссылок
 def get_links_info(links):
@@ -339,6 +341,20 @@ async def swiss_watch_specific(message: types.Message):
     except ValueError:
         await message.reply("Пожалуйста, укажите корректное число после команды /sw.")
 
+async def on_startup(dp):
+    await bot.set_webhook(WEBHOOK_URL)
+
+async def on_shutdown(dp):
+    await bot.delete_webhook()
+
 if __name__ == "__main__":
-    # Запускаем бота
-    executor.start_polling(dp, skip_updates=True)
+    from aiogram import executor
+    executor.start_webhook(
+        dispatcher=dp,
+        webhook_path='',
+        on_startup=on_startup,
+        on_shutdown=on_shutdown,
+        skip_updates=True,
+        host='0.0.0.0',
+        port=int(os.environ.get('PORT', 5000))
+    )
