@@ -7,7 +7,7 @@ import os
 
 # Токен вашего бота (замените на свой)
 BOT_TOKEN = "8007767378:AAGK0ifS-oMWsgmPUvlrIMf4qMgVcQxr4KU"
-WEBHOOK_URL = "https://bot-tgshechka.onrender.com/webhook"  # Замените на URL вашего вебхука
+WEBHOOK_URL = "https://bot_tgshechka.onrender.com/webhook"  # Замените на URL вашего вебхука
 
 # Инициализация бота и диспетчера
 bot = Bot(token=BOT_TOKEN)
