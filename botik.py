@@ -14,6 +14,7 @@ bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
 dp.middleware.setup(LoggingMiddleware())
 
+# Путь к файлу с ссылками
 GIFT_FILE = "gift_links.txt"
 
 # Функция для получения информации о количестве ссылок
@@ -31,7 +32,7 @@ def get_links_info(links):
 
     info = "Количество оставшихся ссылок:\n\n"
     for category, name in categories.items():
-        count = len(filter_links_by_category(links, category))
+        count = len([link for link in links if category in link])
         info += f"{name}: {count}\n"
 
     return info
@@ -94,7 +95,7 @@ async def start_command(message: types.Message):
     keyboard = create_keyboard()
     await message.reply(
         "Привет! Этот бот отправляет случайные ссылки на Telegram-подарки.\n"
-        "Выберите команду из клавиатуры ниже (или введи /info для обзора всех доступных комманд):",
+        "Выберите команду из клавиатуры ниже (или введите /info для обзора всех доступных команд):",
         reply_markup=keyboard
     )
 
@@ -266,7 +267,6 @@ async def send_swiss_watch(message: types.Message):
 @dp.message_handler(commands=["ro"])
 async def eternal_rose_specific(message: types.Message):
     try:
-        # Извлекаем число из команды
         number = int(message.get_args())
         link = f"https://t.me/nft/EternalRose-{number}"
         await message.reply(f"Ваша ссылка (EternalRose): {link}")
